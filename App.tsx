@@ -128,6 +128,53 @@ const Modal = ({ car, onClose, t }: { car: Car; onClose: () => void; t: any }) =
   </div>
 );
 
+const HeroCarousel = ({ cars }: { cars: Car[] }) => {
+  const [current, setCurrent] = useState(0);
+  const slides = useMemo(() => cars.slice(0, 5), [cars]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  return (
+    <div className="absolute inset-0 z-0 bg-zinc-950 overflow-hidden">
+      {slides.map((car, index) => (
+        <div
+          key={car.id}
+          className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
+            index === current ? 'opacity-100 z-10' : 'opacity-0 z-0'
+          }`}
+        >
+          <img
+            src={car.image}
+            className={`w-full h-full object-cover grayscale-[0.2] transition-transform duration-[8000ms] ease-out ${
+              index === current ? 'scale-110' : 'scale-100'
+            }`}
+            alt={car.model}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-zinc-950 z-20" />
+        </div>
+      ))}
+      
+      {/* Slide Indicators */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-3">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            className={`h-1 transition-all duration-500 rounded-full ${
+              i === current ? 'w-12 bg-primary' : 'w-6 bg-white/20'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [isDark, setIsDark] = useState(false);
   const [lang, setLang] = useState('en');
@@ -224,11 +271,11 @@ export default function App() {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-[80] transition-all duration-300 ${isScrolled ? 'glass-nav h-16 shadow-sm' : 'bg-transparent h-20'}`}>
+      <nav className={`fixed top-0 w-full z-[80] transition-all duration-500 ${isScrolled ? 'glass-nav h-16 shadow-lg' : 'bg-transparent h-24'}`}>
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <h1 className="text-2xl font-black tracking-tighter dark:text-white">LUXE<span className="text-primary">DRIVE</span></h1>
-            <div className="hidden md:flex items-center gap-6 text-sm font-semibold uppercase tracking-wider">
+          <div className="flex items-center gap-12">
+            <h1 className="text-2xl font-black tracking-tighter dark:text-white uppercase">LUXE<span className="text-primary">DRIVE</span></h1>
+            <div className="hidden md:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-gray-300">
               <a href="#fleet" className="hover:text-primary transition-colors">{t.fleet}</a>
               <a href="#locations" className="hover:text-primary transition-colors">{t.locations}</a>
               <a href="#about" className="hover:text-primary transition-colors">{t.aboutUs}</a>
@@ -236,45 +283,51 @@ export default function App() {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <select 
-              value={lang} 
-              onChange={(e) => setLang(e.target.value)}
-              className="bg-transparent text-sm font-bold border-none cursor-pointer focus:ring-0"
-            >
-              {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
-            </select>
+          <div className="flex items-center gap-6">
+            <div className="relative">
+              <select 
+                value={lang} 
+                onChange={(e) => setLang(e.target.value)}
+                className="bg-transparent text-[11px] font-black uppercase tracking-widest border-none cursor-pointer focus:ring-0 text-gray-600 dark:text-gray-300"
+              >
+                {LANGUAGES.map(l => <option key={l.code} value={l.code} className="bg-white dark:bg-black text-black dark:text-white">{l.label}</option>)}
+              </select>
+            </div>
             <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <header className="relative h-screen flex items-center justify-center overflow-hidden bg-zinc-950">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-10" />
-          <div className="flex animate-[scroll_40s_linear_infinite] w-[200%] h-full">
-            {[...CARS.slice(0, 5), ...CARS.slice(0, 5)].map((car, i) => (
-              <img key={i} src={car.image} className="w-[20%] h-full object-cover grayscale-[0.3] opacity-60" alt="" />
+      <header className="relative h-screen flex items-center justify-center overflow-hidden">
+        <HeroCarousel cars={CARS} />
+        
+        <div className="relative z-30 text-center text-white px-6 max-w-5xl">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <span className="px-5 py-2 border border-white/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase backdrop-blur-xl bg-white/5">DUBAI</span>
+            <span className="px-5 py-2 border border-white/20 rounded-full text-[10px] font-black tracking-[0.3em] uppercase backdrop-blur-xl bg-white/5">SPAIN</span>
+          </div>
+          <h1 className="text-7xl md:text-9xl font-black mb-8 tracking-tighter leading-[0.85] text-balance">
+            {t.heroTitle.split(' ').map((word: string, i: number) => (
+              <span key={i} className={i === 1 ? 'text-primary' : ''}>{word} </span>
             ))}
+          </h1>
+          <p className="text-lg md:text-2xl font-light opacity-80 max-w-2xl mx-auto leading-relaxed tracking-wide mb-12">
+            {t.heroSub}
+          </p>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+            <a href="#fleet" className="group relative px-12 py-6 bg-primary text-white rounded-full font-black text-sm uppercase tracking-[0.2em] overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-primary/20">
+              <span className="relative z-10">Explore Fleet</span>
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            </a>
+            <a href="#contact" className="px-12 py-6 border border-white/20 rounded-full font-black text-sm uppercase tracking-[0.2em] hover:bg-white/10 transition-all backdrop-blur-md">
+              Inquire Now
+            </a>
           </div>
         </div>
         
-        <div className="relative z-20 text-center text-white px-6 max-w-4xl">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <span className="px-4 py-1.5 border border-white/30 rounded-full text-xs font-bold tracking-widest uppercase backdrop-blur-md">Dubai</span>
-            <span className="px-4 py-1.5 border border-white/30 rounded-full text-xs font-bold tracking-widest uppercase backdrop-blur-md">Spain</span>
-          </div>
-          <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tight leading-[0.9]">{t.heroTitle}</h1>
-          <p className="text-xl md:text-2xl font-light opacity-90 max-w-2xl mx-auto leading-relaxed">{t.heroSub}</p>
-          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-4">
-            <a href="#fleet" className="px-10 py-5 bg-white text-black rounded-full font-black text-lg hover:scale-105 transition-transform">Explore Fleet</a>
-            <a href="#contact" className="px-10 py-5 border border-white/30 rounded-full font-black text-lg hover:bg-white/10 transition-colors backdrop-blur-sm">Contact Us</a>
-          </div>
-        </div>
-        
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
-          <i className="fas fa-chevron-down text-2xl text-white/50"></i>
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 animate-bounce z-30 opacity-40">
+          <i className="fas fa-mouse text-2xl text-white"></i>
         </div>
       </header>
 
@@ -529,7 +582,7 @@ export default function App() {
             <h3 className="text-4xl font-black dark:text-white">Seamless Delivery Anywhere.</h3>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {CITIES.map((city, i) => (
+            {CITIES.slice(0, 20).map((city, i) => (
               <a 
                 key={i} 
                 href="#contact"
@@ -625,11 +678,11 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             <div className="space-y-6">
-              <h2 className="text-2xl font-black tracking-tighter">LUXE<span className="text-primary">DRIVE</span></h2>
+              <h2 className="text-2xl font-black tracking-tighter uppercase">LUXE<span className="text-primary">DRIVE</span></h2>
               <p className="text-sm text-gray-500 leading-relaxed">The pinnacle of luxury car rental. Headquartered in Dubai and Marbella, serving the most discerning clients across the globe.</p>
             </div>
             <div>
-              <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-gray-400">Quick Links</h4>
+              <h4 className="font-bold mb-6 uppercase text-[10px] tracking-[0.2em] text-gray-400">Quick Links</h4>
               <ul className="space-y-4 text-sm text-gray-500">
                 <li><a href="#fleet" className="hover:text-primary transition-colors">Our Fleet</a></li>
                 <li><a href="#locations" className="hover:text-primary transition-colors">Global Offices</a></li>
@@ -638,7 +691,7 @@ export default function App() {
               </ul>
             </div>
             <div>
-              <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-gray-400">Policy</h4>
+              <h4 className="font-bold mb-6 uppercase text-[10px] tracking-[0.2em] text-gray-400">Policy</h4>
               <ul className="space-y-4 text-sm text-gray-500">
                 <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
@@ -647,7 +700,7 @@ export default function App() {
               </ul>
             </div>
             <div>
-              <h4 className="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-gray-400">Newsletter</h4>
+              <h4 className="font-bold mb-6 uppercase text-[10px] tracking-[0.2em] text-gray-400">Newsletter</h4>
               <p className="text-sm text-gray-500 mb-6">Join our VIP list for exclusive fleet updates.</p>
               <div className="flex gap-2">
                 <input type="email" placeholder="Email" className="flex-grow bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:outline-none" />
@@ -655,7 +708,7 @@ export default function App() {
               </div>
             </div>
           </div>
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-600 font-bold uppercase tracking-widest">
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em]">
             <p>&copy; 2024 LuxeDrive Global. All Rights Reserved.</p>
             <div className="flex gap-6">
               <i className="fab fa-instagram hover:text-white transition-colors cursor-pointer"></i>
@@ -685,68 +738,74 @@ export default function App() {
 
       {/* Comparison Modal Overlay */}
       {showCompareModal && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-10 bg-black/90 backdrop-blur-xl overflow-y-auto">
-          <div className="w-full max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-8 md:mb-12">
-              <h2 className="text-3xl md:text-5xl font-black text-white">{t.compareCars}</h2>
-              <button onClick={() => setShowCompareModal(false)} className="text-white text-3xl hover:text-primary transition-colors p-4">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-10 bg-black/95 backdrop-blur-2xl overflow-y-auto">
+          <div className="w-full max-w-7xl mx-auto py-10">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">{t.compareCars}</h2>
+                <p className="text-gray-400 mt-2 font-bold uppercase tracking-widest text-xs">Side-by-side technical evaluation</p>
+              </div>
+              <button onClick={() => setShowCompareModal(false)} className="text-white text-3xl hover:text-primary transition-all p-4 bg-white/5 rounded-full">
                 <i className="fas fa-times"></i>
               </button>
             </div>
             
-            {/* Dynamic Grid Column Adjustment */}
-            <div className={`grid grid-cols-1 gap-6 md:gap-8 ${
+            <div className={`grid grid-cols-1 gap-8 ${
               compareList.length === 1 ? 'md:grid-cols-1 max-w-2xl mx-auto' : 
               compareList.length === 2 ? 'md:grid-cols-2 max-w-5xl mx-auto' : 
               'md:grid-cols-3'
             }`}>
               {compareList.map(car => (
-                <div key={car.id} className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 space-y-6 md:space-y-8 relative overflow-hidden group">
-                  <img src={car.image} className="w-full h-40 md:h-56 object-cover rounded-2xl" alt="" />
-                  <div>
-                    <h4 className="text-primary font-bold uppercase tracking-widest text-xs mb-2">{car.brand}</h4>
-                    <h3 className="text-xl md:text-3xl font-black text-white">{car.model}</h3>
+                <div key={car.id} className="bg-white/5 border border-white/10 rounded-3xl p-8 space-y-8 relative overflow-hidden group shadow-2xl">
+                  <div className="relative h-64 overflow-hidden rounded-2xl">
+                    <img src={car.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="" />
                   </div>
-                  <div className="space-y-4">
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-gray-400 text-xs md:text-sm">Engine</span>
-                      <span className="text-white font-bold text-xs md:text-sm">{car.specs.engine}</span>
+                  <div>
+                    <h4 className="text-primary font-bold uppercase tracking-[0.3em] text-[10px] mb-2">{car.brand}</h4>
+                    <h3 className="text-3xl font-black text-white leading-tight">{car.model}</h3>
+                  </div>
+                  <div className="space-y-6">
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Engine</span>
+                      <span className="text-white font-black text-xs">{car.specs.engine}</span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-gray-400 text-xs md:text-sm">Horsepower</span>
-                      <span className="text-white font-bold text-xs md:text-sm">{car.specs.horsepower} hp</span>
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Power</span>
+                      <span className="text-white font-black text-xs">{car.specs.horsepower} HP</span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-gray-400 text-xs md:text-sm">Efficiency/Range</span>
-                      <span className="text-white font-bold text-xs md:text-sm">{car.specs.fuelEfficiency}</span>
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Range/Eff.</span>
+                      <span className="text-white font-black text-xs">{car.specs.fuelEfficiency}</span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-gray-400 text-xs md:text-sm">0-100 km/h</span>
-                      <span className="text-white font-bold text-xs md:text-sm">{car.specs.acceleration}</span>
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Acceleration</span>
+                      <span className="text-white font-black text-xs">{car.specs.acceleration}</span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-gray-400 text-xs md:text-sm">Seats</span>
-                      <span className="text-white font-bold text-xs md:text-sm">{car.specs.seats}</span>
+                    <div className="flex justify-between border-b border-white/10 pb-3">
+                      <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Capacity</span>
+                      <span className="text-white font-black text-xs">{car.specs.seats} SEATS</span>
                     </div>
-                    <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-gray-400 text-xs md:text-sm">Daily Price</span>
-                      <span className="text-primary font-black text-lg md:text-2xl">${car.pricePerDay}</span>
+                    <div className="flex justify-between items-center pt-4">
+                      <span className="text-gray-500 text-xs font-bold uppercase tracking-widest">Daily Rate</span>
+                      <span className="text-primary font-black text-3xl">${car.pricePerDay}</span>
                     </div>
                   </div>
                   <button 
                     onClick={() => toggleCompare(car)}
-                    className="w-full py-4 bg-white/10 text-white rounded-xl font-bold hover:bg-red-500/20 hover:text-red-500 transition-all text-sm uppercase tracking-widest"
+                    className="w-full py-5 bg-red-500/10 text-red-500 rounded-2xl font-black hover:bg-red-500 hover:text-white transition-all text-xs uppercase tracking-[0.2em]"
                   >
-                    Remove
+                    Remove Selection
                   </button>
                 </div>
               ))}
               
               {compareList.length < 3 && (
-                <div onClick={() => setShowCompareModal(false)} className="cursor-pointer border-2 border-dashed border-white/10 rounded-3xl flex items-center justify-center p-12 text-center text-gray-500 hover:border-white/20 transition-all min-h-[400px]">
-                  <div className="flex flex-col items-center gap-4">
-                    <i className="fas fa-plus-circle text-4xl opacity-20"></i>
-                    <p className="font-bold text-sm">Add another car from the fleet to compare side-by-side</p>
+                <div onClick={() => setShowCompareModal(false)} className="cursor-pointer border-2 border-dashed border-white/10 rounded-3xl flex items-center justify-center p-12 text-center text-gray-500 hover:border-white/20 hover:bg-white/5 transition-all min-h-[500px]">
+                  <div className="flex flex-col items-center gap-6">
+                    <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center">
+                      <i className="fas fa-plus text-2xl opacity-20"></i>
+                    </div>
+                    <p className="font-bold text-xs uppercase tracking-[0.2em]">Add Technical Data</p>
                   </div>
                 </div>
               )}
