@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Copy of LuxeDrive Global - Premium Car Rental",
+  "description": "A high-end luxury car rental platform based in Dubai and Spain, serving major cities worldwide with an extensive fleet of over 200 premium vehicles.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
