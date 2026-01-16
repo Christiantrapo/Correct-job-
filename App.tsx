@@ -189,7 +189,7 @@ const CarCard = ({
 }: CarCardProps) => {
   const handleBooking = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const text = encodeURIComponent(`Hi! I'm interested in booking the ${car.brand} ${car.model}. Is it available?`);
+    const text = encodeURIComponent(`Hi! I'm interested in booking the ${car.brand} ${car.model} Is it available?`);
     window.open(`https://wa.me/971500000000?text=${text}`, '_blank');
   };
 
@@ -430,7 +430,12 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
             <div className="w-full md:max-w-md">
-              <h2 className="text-xs font-bold text-primary uppercase tracking-[0.3em] mb-3">Discovery</h2>
+              <div className="flex justify-between items-baseline mb-3">
+                <h2 className="text-xs font-bold text-primary uppercase tracking-[0.3em]">Discovery</h2>
+                <span className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+                  {filteredCars.length} Cars Found
+                </span>
+              </div>
               <div className="relative">
                 <i className="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 <input 
@@ -460,8 +465,8 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Fix: Passed car as a properly typed object and ensure key is handled by React */}
             {filteredCars.slice(0, 12).map(car => (
-              /* Fix: Removed 'key' prop from CarCard application. React uses the 'key' attribute on the outer element of a map, and it shouldn't be defined in the interface or explicitly passed down if not used inside the component. */
               <CarCard 
                 key={car.id} 
                 car={car} 
@@ -472,6 +477,19 @@ export default function App() {
               />
             ))}
           </div>
+
+          {filteredCars.length === 0 && (
+            <div className="py-20 text-center">
+              <i className="fas fa-car-side text-5xl text-gray-200 dark:text-zinc-800 mb-6"></i>
+              <p className="text-gray-500 dark:text-gray-400 font-light text-xl">No vehicles match your refined criteria.</p>
+              <button 
+                onClick={() => { setSearch(''); setActiveCategories([]); }}
+                className="mt-6 text-primary font-bold text-sm uppercase tracking-widest hover:underline"
+              >
+                Reset Filters
+              </button>
+            </div>
+          )}
         </div>
       </section>
 

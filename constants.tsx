@@ -6,72 +6,79 @@ const BRANDS = [
   'Mercedes-Benz', 'Audi', 'McLaren', 'Aston Martin', 'BMW',
   'Bugatti', 'Koenigsegg', 'Pagani', 'Maserati', 'Range Rover',
   'Lotus', 'Maybach', 'Lucid', 'Tesla', 'Cadillac', 'Rimac',
-  'Pininfarina', 'Apollo', 'Hennessey', 'Zenvo', 'GMA', 'De Tomaso'
+  'Pininfarina', 'Apollo', 'Hennessey', 'Zenvo', 'GMA', 'De Tomaso',
+  'Lexus', 'Jaguar', 'Alfa Romeo', 'Genesis', 'Polestar'
 ];
 
 const CATEGORIES = Object.values(Category);
 
-// Generate 500 luxury cars with extreme diversity
-export const CARS: Car[] = Array.from({ length: 500 }, (_, i) => {
+// Generate 1000 luxury cars with extreme diversity
+export const CARS: Car[] = Array.from({ length: 1000 }, (_, i) => {
   const brand = BRANDS[i % BRANDS.length];
   const category = CATEGORIES[i % CATEGORIES.length];
   
   const models: Record<string, string[]> = {
-    'Rolls-Royce': ['Phantom', 'Cullinan', 'Ghost', 'Spectre', 'Dawn', 'Wraith', 'Boat Tail'],
-    'Lamborghini': ['Urus Performante', 'Revuelto', 'Huracán STO', 'Aventador Ultimae', 'Sian', 'Veneno', 'Countach LPI 800-4'],
-    'Ferrari': ['SF90 Stradale', 'Purosangue', '296 GTB', '812 GTS', 'Roma Spider', 'F8 Tributo', 'Daytona SP3', 'LaFerrari'],
-    'Bentley': ['Continental GT Mulliner', 'Bentayga EWB', 'Flying Spur Speed', 'Bacalar', 'Batur'],
-    'Porsche': ['911 Turbo S', 'Taycan Turbo S', 'Cayenne Turbo GT', 'Panamera Turbo S', '718 GT4 RS', '911 GT3 RS', '918 Spyder'],
-    'Mercedes-Benz': ['G63 AMG Magno', 'S680 Maybach', 'GT 63 S E Performance', 'SL 63 AMG', 'AMG One', 'EQS 580'],
-    'Audi': ['RS Q8', 'R8 V10 Performance Quattro', 'RS6 Avant', 'e-tron GT RS', 'RS7 Performance'],
-    'McLaren': ['750S Spider', 'Artura', '720S', 'Senna', 'GT', 'P1', 'Speedtail', 'Elva'],
-    'Aston Martin': ['DBS Volante', 'DBX 707', 'Vantage F1 Edition', 'Valhalla', 'Valkyrie', 'One-77'],
-    'BMW': ['M8 Competition', 'XM Label Red', 'i7 M70', 'M5 CS', 'Z4 M40i', 'M4 CSL'],
-    'Bugatti': ['Chiron Super Sport', 'Mistral', 'Bolide', 'Divo', 'Centodieci', 'Veyron Grand Sport'],
-    'Koenigsegg': ['Jesko Attack', 'Gemera', 'Regera', 'Agera RS', 'One:1', 'CC850'],
-    'Pagani': ['Huayra Roadster BC', 'Utopia', 'Zonda Cinque', 'Huayra Imola'],
-    'Maserati': ['MC20 Cielo', 'GranTurismo Folgore', 'Grecale Trofeo', 'MC12'],
-    'Range Rover': ['SV Autobiography', 'Sport SVR', 'Velar HST', 'Evoque Dynamic'],
-    'Lotus': ['Evija', 'Emira', 'Eletre R'],
-    'Maybach': ['GLS 600', 'S-Class Night Series', 'Electric SUV'],
-    'Lucid': ['Air Sapphire', 'Air Grand Touring'],
-    'Tesla': ['Model S Plaid', 'Model X Plaid', 'Roadster 2.0', 'Cybertruck Foundation'],
-    'Cadillac': ['Escalade-V', 'CT5-V Blackwing', 'Celestiq'],
-    'Rimac': ['Nevera', 'Concept One'],
-    'Pininfarina': ['Battista', 'B95 Speedster'],
+    'Rolls-Royce': ['Phantom VIII', 'Cullinan Black Badge', 'Ghost EWB', 'Spectre EV', 'Dawn Aero', 'Wraith Luminary', 'Boat Tail Custom'],
+    'Lamborghini': ['Urus Performante', 'Revuelto V12', 'Huracán Sterrato', 'Aventador SVJ', 'Sian FKP 37', 'Veneno Roadster', 'Countach LPI 800-4', 'Essenza SCV12', 'Terzo Millennio'],
+    'Ferrari': ['SF90 XX Stradale', 'Purosangue V12', '296 GTS', '812 Competizione', 'Roma Spider', 'F8 Tributo', 'Daytona SP3', 'LaFerrari Aperta', 'Monza SP2', '488 Pista'],
+    'Bentley': ['Continental GT Mulliner', 'Bentayga EWB Azure', 'Flying Spur Speed', 'Bacalar', 'Batur', 'Mulsanne Grand Limousine'],
+    'Porsche': ['911 Turbo S', 'Taycan Turbo GT', 'Cayenne Turbo GT', 'Panamera Turbo S E-Hybrid', '718 GT4 RS', '911 GT3 RS', '918 Spyder', 'Carrera GT', 'Mission X'],
+    'Mercedes-Benz': ['G63 AMG Magno', 'S680 Maybach', 'GT 63 S E Performance', 'SL 63 AMG', 'AMG One', 'EQS 580', 'EQG Electric G-Class'],
+    'Audi': ['RS Q8', 'R8 V10 GT RWD', 'RS6 Avant Performance', 'e-tron GT RS', 'RS7 Performance', 'Horch A8 L'],
+    'McLaren': ['750S Spider', 'Artura Performance', '765LT Spider', 'Senna GTR', 'McLaren GT', 'P1 GTR', 'Speedtail', 'Elva MSO', 'Solus GT'],
+    'Aston Martin': ['DBS Volante Ultimate', 'DBX 707', 'Vantage F1 Edition', 'Valhalla', 'Valkyrie AMR Pro', 'One-77', 'Victor', 'DB12 Volante'],
+    'BMW': ['M8 Competition', 'XM Label Red', 'i7 M70', 'M5 CS', 'Z4 M40i', 'M4 CSL', '3.0 CSL Hommage'],
+    'Bugatti': ['Chiron Super Sport 300+', 'Mistral Roadster', 'Bolide', 'Divo', 'Centodieci', 'Veyron Grand Sport Vitesse', 'La Voiture Noire'],
+    'Koenigsegg': ['Jesko Absolut', 'Gemera HVH', 'Regera', 'Agera RS', 'One:1', 'CC850', 'Quant'],
+    'Pagani': ['Huayra Roadster BC', 'Utopia', 'Zonda Cinque', 'Huayra Imola', 'Zonda Revolucion'],
+    'Maserati': ['MC20 Cielo', 'GranTurismo Folgore', 'Grecale Trofeo', 'MC12 Stradale'],
+    'Range Rover': ['SV Autobiography LWB', 'Sport SVR Ultimate', 'Velar HST', 'Evoque Dynamic NW'],
+    'Lotus': ['Evija Fittipaldi', 'Emira V6', 'Eletre R'],
+    'Maybach': ['GLS 600 Night Series', 'S-Class Haute Voiture', 'Electric SUV Concept'],
+    'Lucid': ['Air Sapphire', 'Air Grand Touring Performance'],
+    'Tesla': ['Model S Plaid+', 'Model X Plaid', 'Roadster 2.0 Space Edition', 'Cybertruck Cyberbeast'],
+    'Cadillac': ['Escalade-V ESV', 'CT5-V Blackwing', 'Celestiq Custom'],
+    'Rimac': ['Nevera Time Attack', 'Concept One'],
+    'Pininfarina': ['Battista Anniversario', 'B95 Speedster'],
     'Apollo': ['Intensa Emozione', 'Project Evo'],
-    'Hennessey': ['Venom F5', 'VelociRaptor 6x6'],
-    'Zenvo': ['Aurora', 'TSR-S'],
-    'GMA': ['T.50', 'T.33'],
-    'De Tomaso': ['P72']
+    'Hennessey': ['Venom F5 Revolution', 'VelociRaptor 6x6', 'Mammoth 1000'],
+    'Zenvo': ['Aurora Agil', 'Aurora Tur', 'TSR-GT'],
+    'GMA': ['T.50 Niki Lauda', 'T.33 Spider'],
+    'De Tomaso': ['P72', 'P900'],
+    'Lexus': ['LFA Nürburgring', 'LC 500 Inspiration', 'LX 600 Ultra Luxury'],
+    'Jaguar': ['F-Type ZP Edition', 'F-Pace SVR Edition 1988'],
+    'Alfa Romeo': ['33 Stradale', 'Giulia GTA'],
+    'Genesis': ['G90 Magma', 'GV80 Coupe'],
+    'Polestar': ['Polestar 1', 'Polestar 6 LA Concept']
   };
   
   const brandModels = models[brand] || ['Elite Edition', 'Grand Tourer', 'Performance Plus'];
   const model = brandModels[i % brandModels.length];
 
   // Logic for generating realistic price scaling
-  const basePrice = 300;
-  const topTier = ['Bugatti', 'Koenigsegg', 'Pagani', 'Rimac', 'Apollo'].includes(brand);
-  const brandPremium = topTier ? 2500 : ((BRANDS.indexOf(brand) < 8) ? 800 : 200);
+  const basePrice = 350;
+  const topTier = ['Bugatti', 'Koenigsegg', 'Pagani', 'Rimac', 'Apollo', 'Zenvo', 'GMA'].includes(brand);
+  const brandPremium = topTier ? 3500 : ((BRANDS.indexOf(brand) < 10) ? 950 : 300);
   
-  const isElectric = ['Tesla', 'Lucid', 'Rimac', 'Pininfarina'].includes(brand) || (i % 7 === 0);
+  const isElectric = ['Tesla', 'Lucid', 'Rimac', 'Pininfarina', 'Polestar'].includes(brand) || (i % 8 === 0);
+  const isLimited = (i % 15 === 0);
 
   return {
     id: `car-${i}`,
     brand,
-    model: `${model}${i % 7 === 0 ? ' Black Badge' : ''}${i % 11 === 0 ? ' Carbon Edition' : ''}${i % 13 === 0 ? ' Heritage' : ''}`,
-    category: topTier ? Category.SPORT : category,
-    year: 2025 - (i % 4),
-    pricePerDay: basePrice + brandPremium + (i % 100) * 20,
+    model: `${model}${isLimited ? ' [1 of 10]' : ''}${i % 7 === 0 ? ' Black Badge' : ''}${i % 11 === 0 ? ' Carbon' : ''}`,
+    category: topTier ? Category.SPORT : (brand === 'Tesla' || isElectric ? Category.ELECTRIC : category),
+    year: 2025 - (i % 3),
+    pricePerDay: basePrice + brandPremium + (i % 50) * 25,
     image: `https://picsum.photos/seed/luxe-car-${i}/1200/800`,
-    isAvailable: Math.random() > 0.15, // 85% availability
+    isAvailable: Math.random() > 0.12, // 88% availability
     specs: {
-      engine: isElectric ? 'Electric Quad Motor' : (topTier || i % 5 === 0 ? 'W16 Quad-Turbo' : (i % 3 === 0 ? 'V12 Bi-Turbo' : 'V8 Hybrid')),
-      acceleration: (1.8 + (i % 20) / 10).toFixed(1) + 's',
-      topSpeed: (300 + (i % 15) * 10) + ' km/h',
+      engine: isElectric ? 'Electric Quad Motor' : (topTier || i % 6 === 0 ? 'W16 Quad-Turbo' : (i % 4 === 0 ? 'V12 Bi-Turbo' : 'V8 Hybrid')),
+      acceleration: (1.7 + (i % 25) / 12).toFixed(1) + 's',
+      topSpeed: (310 + (i % 20) * 8) + ' km/h',
       seats: category === Category.SUV ? 5 : (category === Category.LUXURY ? 4 : 2),
-      fuelEfficiency: isElectric ? `${500 + (i % 30) * 10} km Range` : `${10 + (i % 12)} L/100km`,
-      horsepower: 600 + (i % 20) * 50 + (isElectric ? 400 : 0) + (topTier ? 1000 : 0)
+      fuelEfficiency: isElectric ? `${550 + (i % 40) * 10} km Range` : `${9 + (i % 14)} L/100km`,
+      horsepower: 650 + (i % 25) * 60 + (isElectric ? 450 : 0) + (topTier ? 1100 : 0)
     }
   };
 });
